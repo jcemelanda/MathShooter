@@ -654,9 +654,9 @@ class Game:
         fullname = os.path.join('data', name)
         try:
             image = pygame.image.load(fullname)
-        except pygame.error, message:
-            print 'Erro ao carregar a imagem:', fullname
-            raise SystemExit, message
+        except pygame.error as message:
+            print ('Erro ao carregar a imagem:', fullname)
+            raise (SystemExit, message)
         image = image.convert()
         if colorkey is not None:
             if colorkey is -1:
@@ -673,9 +673,9 @@ class Game:
         fullname = os.path.join('data', name)
         try:
             sound = pygame.mixer.Sound(fullname)
-        except pygame.error, message:
-            print 'Erro ao carregar o som:', fullname
-            raise SystemExit, message
+        except pygame.error as message:
+            print ('Erro ao carregar o som:', fullname)
+            raise (SystemExit, message)
         return sound
     
     #Modifies sprite_collide_any from the pygame api
@@ -796,9 +796,9 @@ class Enemy(pygame.sprite.Sprite):
     def setValue(self):
         val = eval(game.operation.text)
         if val + 3 > 10:
-            self.text = str(random.choice(range(int(1.5 *val)) + [val] * val))
+            self.text = str(random.choice(list(range(int(1.5 *val))) + [val] * val))
         else:
-            self.text = str(random.choice(range(10)+ [val] * 10))
+            self.text = str(random.choice(list(range(10))+ [val] * 10))
             
     def update(self):
         self.rect.centerx += self.dx
@@ -811,11 +811,11 @@ class Enemy(pygame.sprite.Sprite):
             game.explosion_sprites.add(EnemyExplosion(self.rect.center, game))
             game.explode.play()
             if eval(game.operation.text) == self.num:
-                print "Acertou!!!" 
+                print ("Acertou!!!") 
                 game.score.score += 10
                 game.operation.generate()
             else:
-                print "Errou..."
+                print ("Errou...")
                 game.score.score -= 10
             self.kill()
            

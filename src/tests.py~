@@ -5,7 +5,7 @@
 
 __author__ = 'julio'
 
-class GameTest():
+class GameTest(TestCase):
     game = None
 
     def test_game_start(self):
