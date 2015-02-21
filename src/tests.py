@@ -1,11 +1,11 @@
 # -*- coding:utf8 -*-
-from unittest.case import TestCase
-import pygame
-from MathShooter import Game
+#from unittest.case import TestCase
+#import pygame
+#from MathShooter import Game
 
 __author__ = 'julio'
 
-class GameTest(TestCase):
+class GameTest():
     game = None
 
     def test_game_start(self):

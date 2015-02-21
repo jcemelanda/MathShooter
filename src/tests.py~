@@ -1,11 +1,11 @@
 # -*- coding:utf8 -*-
-from unittest.case import TestCase
-import pygame
-from MathShooter import Game
+#from unittest.case import TestCase
+#import pygame
+#from MathShooter import Game
 
 __author__ = 'julio'
 
-class GameTest():
+class GameTest(TestCase):
     game = None
 
     def test_game_start(self):
@@ -17,6 +17,5 @@ class GameTest():
         self.game.main_menu()
         pygame.quit()
 
-gm = GameTest()
-gm.test_start_menu()
+
 print ("ok")
