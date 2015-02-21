@@ -5,7 +5,7 @@ from MathShooter import Game
 
 __author__ = 'julio'
 
-class GameTest(TestCase):
+class GameTest():
     game = None
 
     def test_game_start(self):
@@ -17,5 +17,6 @@ class GameTest(TestCase):
         self.game.main_menu()
         pygame.quit()
 
-
+gm = GameTest()
+gm.test_start_menu()
 print ("ok")
