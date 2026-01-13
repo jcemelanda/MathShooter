@@ -54,8 +54,8 @@ class Game:
         try:
             self.music = pygame.mixer.music.load ("data/music/Stone Fortress.ogg")
             pygame.mixer.music.play(-1)
-        except:
-            'print the game will load without music'      
+        except Exception:
+            print('O jogo serÃ¡ executado sem mÃºsica')      
         
     def play_game(self):
         
@@ -460,16 +460,16 @@ class Game:
         #Option Menu Text
         instructions = Menu(
             [""], 
-            ["Você deve atirar nos números que são resposta para a operação"],
+            ["VocÃª deve atirar nos nÃºmeros que sÃ£o resposta para a operaÃ§Ã£o"],
             [""],
             ["mostrada no canto superior esquerdo da tela"],
             [""],
-            ["Navegue sua nave com as setas, e atire com o espaço."],
+            ["Navegue sua nave com as setas, e atire com o espaÃ§o."],
             [""],
-            ["Ao acertar, a pontuação é acrescentada, e ao errar, a pontuação"],
+            ["Ao acertar, a pontuaÃ§Ã£o Ã© acrescentada, e ao errar, a pontuaÃ§Ã£o"],
             [""],
-            ["Será decrementada"],
-            [""],
+            ["SerÃ¡ decrementada"],
+            [""]
             ["Ao chegar a -100 pontos, o jogo termina (Game Over)"],
             [""],
             [""],
@@ -525,11 +525,11 @@ class Game:
     
         info = Menu(
             [""], 
-            ["Versão de testes de Math Shooter."],
+            ["VersÃ£o de testes de Math Shooter."],
             [""],
-            [" Distribuído sob a GPL"],
+            [" DistribuÃ­do sob a GPL"],
             [""],
-            ["Desenvolvido por Júlio César Eiras Melanda"],
+            ["Desenvolvido por JÃºlio CÃ©sar Eiras Melanda"],
             [""],
             [""],
             ["            PRESSIONE ESC PARA RETORNAR            "])
@@ -605,7 +605,7 @@ class Game:
         menu = Menu(
             ["Treinar", self.option0],
             ["Inicar", self.option1],
-            ["Missão", self.option2],
+            ["MissÃ£o", self.option2],
             ["Sobre", self.option3],
             ["Sair", self.option4])
             
@@ -655,11 +655,11 @@ class Game:
         try:
             image = pygame.image.load(fullname)
         except pygame.error as message:
-            print ('Erro ao carregar a imagem:', fullname)
-            raise (SystemExit, message)
+            print('Erro ao carregar a imagem:', fullname)
+            raise SystemExit(message)
         image = image.convert()
         if colorkey is not None:
-            if colorkey is -1:
+            if colorkey == -1:
                 colorkey = image.get_at((0,0))
             image.set_colorkey(colorkey, RLEACCEL)
         return image, image.get_rect()
@@ -674,8 +674,8 @@ class Game:
         try:
             sound = pygame.mixer.Sound(fullname)
         except pygame.error as message:
-            print ('Erro ao carregar o som:', fullname)
-            raise (SystemExit, message)
+            print('Erro ao carregar o som:', fullname)
+            raise SystemExit(message)
         return sound
     
     #Modifies sprite_collide_any from the pygame api
@@ -755,8 +755,8 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_SPACE]:
             self.laser_timer = self.laser_timer + 1
             if self.laser_timer == self.laser_max:
-                game.laser_sprites.add(Laser(self.rect.midtop, game))
-                game.fire.play()
+                self.game.laser_sprites.add(Laser(self.rect.midtop, self.game))
+                self.game.fire.play()
                 self.laser_timer = 0
         
     def reset(self):
@@ -767,7 +767,7 @@ class Laser(pygame.sprite.Sprite):
     def __init__(self, pos, game):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.image, self.rect = game.load_image("sprites/laser.png", -1)
+        self.image, self.rect = self.game.load_image("sprites/laser.png", -1)
         self.rect = self.image.get_rect()
         self.rect.center = pos
 
@@ -794,7 +794,7 @@ class Enemy(pygame.sprite.Sprite):
         self.reset()
         
     def setValue(self):
-        val = eval(game.operation.text)
+        val = eval(self.game.operation.text)
         if val + 3 > 10:
             self.text = str(random.choice(list(range(int(1.5 *val))) + [val] * val))
         else:
@@ -803,25 +803,25 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.rect.centerx += self.dx
         self.rect.centery += self.dy
-        if self.rect.top > game.screen.get_height():
+        if self.rect.top > self.game.screen.get_height():
             self.kill()
            
         #Laser Collisions    
-        if game.sprite_collide_any(self, game.laser_sprites):
-            game.explosion_sprites.add(EnemyExplosion(self.rect.center, game))
-            game.explode.play()
-            if eval(game.operation.text) == self.num:
+        if self.game.sprite_collide_any(self, self.game.laser_sprites):
+            self.game.explosion_sprites.add(EnemyExplosion(self.rect.center, self.game))
+            self.game.explode.play()
+            if eval(self.game.operation.text) == self.num:
                 print ("Acertou!!!") 
-                game.score.score += 10
-                game.operation.generate()
+                self.game.score.score += 10
+                self.game.operation.generate()
             else:
                 print ("Errou...")
-                game.score.score -= 10
+                self.game.score.score -= 10
             self.kill()
            
     def reset(self):
         self.rect.bottom = 0
-        self.rect.centerx = random.randrange(0, game.screen.get_width())
+        self.rect.centerx = random.randrange(0, self.game.screen.get_width())
         self.dy = random.randrange(5, 10)
         self.dx = random.randrange(-2, 2)
     
@@ -835,22 +835,22 @@ class Enemy_Train(Enemy):
     def update(self):
         self.rect.centerx += self.dx
         self.rect.centery += self.dy
-        if self.rect.top > game.screen.get_height():
+        if self.rect.top > self.game.screen.get_height():
             self.kill()
            
         #Laser Collisions    
-        if game.sprite_collide_any(self, game.laser_sprites):
-            game.explosion_sprites.add(EnemyExplosion(self.rect.center, game))
-            game.explode.play()
+        if self.game.sprite_collide_any(self, self.game.laser_sprites):
+            self.game.explosion_sprites.add(EnemyExplosion(self.rect.center, self.game))
+            self.game.explode.play()
             self.kill()
-            game.op_train.generate()
-            game.shots_counter += 1
+            self.game.op_train.generate()
+            self.game.shots_counter += 1
         
 class EnemyExplosion(pygame.sprite.Sprite):
     def __init__(self, pos, game):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.image, self.rect = game.load_image("sprites/explosao.png", -1)
+        self.image, self.rect = self.game.load_image("sprites/explosao.png", -1)
         self.rect.center = pos        
         self.counter = 0
         self.max_count = 10
@@ -897,10 +897,10 @@ class Operation(pygame.sprite.Sprite):
             if (self.op == ' / ') and (self.second != '0')\
                                     and (self.first != '0'):
                 if int(self.first) % int(self.second) == 0:
-                	if (int(self.first) > int(self.second)):
-                		ok = True
-                	else:
-                		ok = False
+                    if (int(self.first) > int(self.second)):
+                        ok = True
+                    else:
+                        ok = False
             elif (self.op == ' - ') and (int(self.first) < int(self.second)):
                 ok = False 
             elif(self.first != '0') and (self.second != '0'):
@@ -1038,7 +1038,7 @@ class Speech(pygame.sprite.Sprite):
         self.game = game
     
     def update(self, image, pos = (500, 300)):
-        self.image, self.rect = game.load_image(image, -1)
+        self.image, self.rect = self.game.load_image(image, -1)
         self.rect = self.image.get_rect()
         self.rect.center = pos
     
@@ -1050,7 +1050,7 @@ class Big_Operation(Operation):
         self.font = pygame.font.Font(
                                 "data/fonts/DejaVuLGCSansMono-Bold.ttf", 72)                    
     def update(self):
-        self.text = game.op_train.text
+        self.text = self.game.op_train.text
         self.image = self.font.render(self.text, 1, (0, 255, 255))
         self.rect = self.image.get_rect()
         self.rect.center = (400,300)
