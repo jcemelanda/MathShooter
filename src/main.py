@@ -33,6 +33,9 @@ import os, sys, pygame, random
 from pygame.locals import RLEACCEL, KEYUP, K_LEFT, K_SPACE
 from pygame.locals import K_RIGHT, K_UP, K_DOWN
 
+from assets import load_image, load_sound, get_font
+
+
 class Game:
     
     def __init__(self):
@@ -40,7 +43,7 @@ class Game:
         os.environ['SDL_VIDEO_CENTERED'] = "1"
         pygame.init()
         pygame.display.set_caption("Math Shooter")
-        icon = pygame.image.load("data/Math Shooter.png")
+        icon, _ = load_image("Math Shooter.png")
         icon = pygame.display.set_icon(icon)
         self.screen = pygame.display.set_mode((800, 600))
         pygame.mouse.set_visible(0)
@@ -63,8 +66,8 @@ class Game:
         self.player = Player(self)
         self.score = Score()
         self.operation = Operation()
-        self.fire = self.load_sound("sounds/laser.ogg")
-        self.explode = self.load_sound("sounds/explosao.ogg")
+        self.fire = load_sound("laser.ogg")
+        self.explode = load_sound("explosao.ogg")
         self.clock = pygame.time.Clock()
         #Arena
         self.arena = Arena(self)
@@ -166,8 +169,8 @@ class Game:
         self.player = Player(self)
         self.score = Score()
         self.teacher = Teacher(self)
-        self.fire = self.load_sound( "sounds/laser.ogg")
-        self.explode = self.load_sound("sounds/explosao.ogg")
+        self.fire = load_sound("laser.ogg")
+        self.explode = load_sound("explosao.ogg")
         self.speech = Speech(self)
         self.speech_sprite = pygame.sprite.RenderPlain([self.speech]) 
         self.clock = pygame.time.Clock()
@@ -375,8 +378,7 @@ class Game:
                         )
                 #Menu settings
                 menu.center_at(400, 400)
-                menu.set_font(pygame.font.Font(
-                                    "data/fonts/DejaVuLGCSansMono.ttf", 32))
+                menu.set_font(get_font("DejaVuLGCSansMono.ttf", 32))
                 menu.set_highlight_color((0, 255, 0))
                 menu.set_normal_color((0, 85, 0))
     
@@ -477,7 +479,7 @@ class Game:
     
         #Title 
         menuTitle.center_at(150, 150)
-        menuTitle.set_font(pygame.font.Font("data/fonts/planet5.ttf", 48))
+        menuTitle.set_font(get_font("planet5.ttf", 48))
         menuTitle.set_highlight_color((0, 255, 0))
             
     
@@ -485,7 +487,7 @@ class Game:
         instructions.center_at(440, 350)
     
         #Menu Font
-        instructions.set_font(pygame.font.Font("data/fonts/arial.ttf", 22))
+        instructions.set_font(get_font("arial.ttf", 22))
     
         #Highlight Color
         instructions.set_normal_color((0, 255, 0))
@@ -648,36 +650,6 @@ class Game:
             menuTitle.draw(self.screen)
             pygame.display.flip()
 
-
-    #Load Images
-    def load_image(self, name, colorkey=None):
-        fullname = os.path.join('data', name)
-        try:
-            image = pygame.image.load(fullname)
-        except pygame.error as message:
-            print('Erro ao carregar a imagem:', fullname)
-            raise SystemExit(message)
-        image = image.convert()
-        if colorkey is not None:
-            if colorkey == -1:
-                colorkey = image.get_at((0,0))
-            image.set_colorkey(colorkey, RLEACCEL)
-        return image, image.get_rect()
-    
-    #Load Sounds
-    def load_sound(self, name):
-        class NoneSound:
-            def play(self): pass
-        if not pygame.mixer or not pygame.mixer.get_init():
-            return NoneSound()
-        fullname = os.path.join('data', name)
-        try:
-            sound = pygame.mixer.Sound(fullname)
-        except pygame.error as message:
-            print('Erro ao carregar o som:', fullname)
-            raise SystemExit(message)
-        return sound
-    
     #Modifies sprite_collide_any from the pygame api
     #(pygame.sprite.sprite_collide_any)
     def sprite_collide_any(self, sprite, group, collided = None): 
@@ -720,7 +692,7 @@ class Arena(pygame.sprite.Sprite):
     def __init__(self, game):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.image, self.rect = game.load_image("menu/arena.jpg", -1)
+        self.image, self.rect = load_image("menu/arena.jpg", -1)
         self.dy = 5
         self.reset()
     
@@ -737,7 +709,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, game):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.image, self.rect = game.load_image("sprites/jogador.png", -1)
+        self.image, self.rect = load_image("sprites/jogador.png", -1)
         self.rect.center = (400,500)
         self.dx = 0
         self.dy = 0
@@ -767,7 +739,7 @@ class Laser(pygame.sprite.Sprite):
     def __init__(self, pos, game):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.image, self.rect = self.game.load_image("sprites/laser.png", -1)
+        self.image, self.rect = load_image("sprites/laser.png", -1)
         self.rect = self.image.get_rect()
         self.rect.center = pos
 
@@ -783,7 +755,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, game):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.font = pygame.font.Font("data/fonts/arial.ttf", 36)
+        self.font = get_font("arial.ttf", 36)
         self.setValue()
         self.num = int(self.text)
         self.image = self.font.render(self.text, 1, (random.randrange(0, 255),
@@ -850,7 +822,7 @@ class EnemyExplosion(pygame.sprite.Sprite):
     def __init__(self, pos, game):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.image, self.rect = self.game.load_image("sprites/explosao.png", -1)
+        self.image, self.rect = load_image("sprites/explosao.png", -1)
         self.rect.center = pos        
         self.counter = 0
         self.max_count = 10
@@ -863,7 +835,7 @@ class Score(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         self.score = 0
-        self.font = pygame.font.Font("data/fonts/DejaVuLGCSansMono-Bold.ttf", 28)
+        self.font = get_font("DejaVuLGCSansMono-Bold.ttf", 28)
         
     def update(self):
         self.text = "Pontos: %d" % (self.score,)
@@ -878,8 +850,8 @@ class Operation(pygame.sprite.Sprite):
         self.generate()
                   
     def setFont(self):
-        self.font = pygame.font.Font(
-                                "data/fonts/DejaVuLGCSansMono-Bold.ttf", 28)
+        self.font = get_font("DejaVuLGCSansMono-Bold.ttf", 28)
+
     def update(self):
         self.image = self.font.render(self.text, 1, (0, 255, 255))
         self.rect = self.image.get_rect()
@@ -914,8 +886,8 @@ class OperationTrain(Operation):
         self.generate()
     
     def setFont(self):
-        self.font = pygame.font.Font(
-                                "data/fonts/DejaVuLGCSansMono-Bold.ttf", 48)                    
+        self.font = get_font("DejaVuLGCSansMono-Bold.ttf", 48)                    
+
     def update(self):
         self.image = self.font.render(self.text, 1, (0, 255, 255))
         self.rect = self.image.get_rect()
@@ -924,7 +896,7 @@ class OperationTrain(Operation):
 class Gameover(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.font = pygame.font.Font("data/fonts/planet5.ttf", 48)
+        self.font = get_font("planet5.ttf", 48)
         
     def update(self):
         self.text = ("GAME OVER")
@@ -935,8 +907,7 @@ class Gameover(pygame.sprite.Sprite):
 class Gameoveresc(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.font = pygame.font.Font(
-                                "data/fonts/DejaVuLGCSansMono-Bold.ttf", 28)
+        self.font = get_font("DejaVuLGCSansMono-Bold.ttf", 28)
         
     def update(self):
         self.text = "PRESSIONE ESC PARA RETORNAR"
@@ -1023,7 +994,7 @@ class Teacher(pygame.sprite.Sprite):
     def __init__(self, game):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
-        self.image, self.rect = game.load_image("sprites/professor.png", -1)
+        self.image, self.rect = load_image("sprites/professor.png", -1)
         self.rect = self.image.get_rect()
         self.rect.center = (700, 300)
 
@@ -1038,7 +1009,7 @@ class Speech(pygame.sprite.Sprite):
         self.game = game
     
     def update(self, image, pos = (500, 300)):
-        self.image, self.rect = self.game.load_image(image, -1)
+        self.image, self.rect = load_image(image, -1)
         self.rect = self.image.get_rect()
         self.rect.center = pos
     
@@ -1046,9 +1017,10 @@ class Big_Operation(Operation):
     def __init__(self, game):
         Operation.__init__(self)                   
         self.game = game
+
     def setFont(self):
-        self.font = pygame.font.Font(
-                                "data/fonts/DejaVuLGCSansMono-Bold.ttf", 72)                    
+        self.font = get_font("DejaVuLGCSansMono-Bold.ttf", 72)
+
     def update(self):
         self.text = self.game.op_train.text
         self.image = self.font.render(self.text, 1, (0, 255, 255))
