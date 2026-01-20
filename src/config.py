@@ -34,6 +34,7 @@ SCORE_CENTER = (400, 20)
 OP_CENTER = (100, 20)
 GAME_OVER_THRESHOLD = -100
 
+
 # Estados do Jogo
 class GameState:
     MENU = "menu"

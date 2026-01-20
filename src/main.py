@@ -1,6 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
-'''
+"""
 #   Math Shooter.
 #   A math scrolling arcade shooter.
 #   This code is based in the one written by Tyler Gray & Chad Haley and
@@ -25,8 +24,8 @@
 #
 #	The song Stone Fortress use as background music of the game was taken from
 #	http://opengameart.org/content/stone-fortress
-# 
-'''
+#
+"""
 
 from game import Game
 

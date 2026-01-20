@@ -23,6 +23,23 @@ Execute o script principal:
 python src/main.py
 ```
 
+### Executando Testes
+Para rodar a suíte de testes unitários:
+```bash
+PYTHONPATH=./src:./tests pytest tests/
+```
+
+### Qualidade de Código (Lint & Type Checking)
+Este projeto utiliza `uv` para gerenciamento, `ruff` para linting e `mypy` para checagem de tipos:
+```bash
+# Lint e formatação
+ruff check src/
+ruff format src/
+
+# Checagem de tipos
+python -m mypy src/
+```
+
 ## 🎮 Como Jogar
 - **Setas do Teclado:** Movimentam sua nave pela arena.
 - **Espaço:** Dispara o laser.
@@ -40,6 +57,7 @@ Este projeto foi recentemente refatorado para exemplificar as melhores práticas
 - **Tipagem Estrutural (Protocols):** Uso de `typing.Protocol` para definir interfaces flexíveis (`Drawable`, `Updatable`).
 - **Geradores para Scripting:** O modo treinamento usa geradores Python para gerenciar sequências de eventos sem bloquear o loop principal.
 - **Propriedades Reativas:** Uso de `@property` para gerenciamento automático de estado e renderização na UI.
+- **Suíte de Testes (Headless):** Testes unitários com `pytest` e *mocking* de hardware para validação da lógica matemática e de interface sem necessidade de janela gráfica.
 - **Carregamento de Assets:** Sistema centralizado de singletons para imagens, sons e fontes, garantindo eficiência e facilidade de acesso.
 
 ## 📝 Licença

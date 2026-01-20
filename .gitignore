@@ -56,3 +56,8 @@ docs/_build/
 target/
 
 .idea/
+
+.mypy_cache/
+.pytype/
+.pytest_cache/
+.ruff_cache/
