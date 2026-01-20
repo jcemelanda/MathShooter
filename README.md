@@ -10,34 +10,34 @@ Math Shooter é um jogo arcade educativo projetado para ajudar crianças (e adul
 - Python 3.10 ou superior
 - Pygame CE (ou Pygame padrão)
 
-### Instalação
-1. Clone o repositório ou baixe os arquivos.
-2. No diretório raiz, instale as dependências:
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Instalação e Execução
+Este projeto utiliza `uv` para um gerenciamento de dependências extremamente rápido.
 
-### Iniciando o Jogo
-Execute o script principal:
-```bash
-python src/main.py
-```
+1. Clone o repositório ou baixe os arquivos.
+2. No diretório raiz, instale as dependências e o ambiente virtual:
+   ```bash
+   uv sync
+   ```
+3. Inicie o jogo:
+   ```bash
+   uv run src/main.py
+   ```
 
 ### Executando Testes
 Para rodar a suíte de testes unitários:
 ```bash
-PYTHONPATH=./src:./tests pytest tests/
+uv run pytest
 ```
 
 ### Qualidade de Código (Lint & Type Checking)
 Este projeto utiliza `uv` para gerenciamento, `ruff` para linting e `mypy` para checagem de tipos:
 ```bash
 # Lint e formatação
-ruff check src/
-ruff format src/
+uv run ruff check src/
+uv run ruff format src/
 
 # Checagem de tipos
-python -m mypy src/
+uv run mypy src/
 ```
 
 ## 🎮 Como Jogar
